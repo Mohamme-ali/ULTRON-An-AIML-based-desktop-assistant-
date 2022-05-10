@@ -1,0 +1,94 @@
+#include <SoftwareSerial.h>
+SoftwareSerial BT(0,1); //RX, TX respetively
+String voice;
+int RED = 9; // Red LED at pin 9
+int BLUE = 11; // Blue LED at pin 11
+int GREEN = 10; //Green LED at pin 10
+void RedOn(){ // Red LED on, others off
+digitalWrite (RED, HIGH);
+digitalWrite (GREEN, LOW);
+digitalWrite (BLUE, LOW);
+}
+void RedOff(){ // Red LED off, others on
+digitalWrite (RED, LOW);
+digitalWrite (GREEN, HIGH);
+digitalWrite (BLUE, HIGH);
+}
+void GreenOn(){
+digitalWrite (GREEN, HIGH);
+digitalWrite (RED, LOW);
+digitalWrite (BLUE, LOW);
+}
+void GreenOff(){
+digitalWrite (GREEN, LOW);
+digitalWrite (RED, HIGH);
+digitalWrite (BLUE, HIGH);
+}
+void BlueOn(){
+digitalWrite (BLUE, HIGH);
+digitalWrite (GREEN, LOW);
+digitalWrite (RED, LOW);
+}
+void BlueOff(){
+digitalWrite (BLUE, LOW);
+digitalWrite (GREEN, HIGH);
+digitalWrite (RED, HIGH);
+}void allon() {
+digitalWrite (RED, HIGH);
+digitalWrite (GREEN, HIGH);
+digitalWrite (BLUE, HIGH);
+}
+void alloff() {
+digitalWrite (RED, LOW);
+digitalWrite (GREEN, LOW);
+digitalWrite (BLUE, LOW);
+}
+void setup() {
+BT.begin(9600);
+Serial.begin(9600);
+pinMode(RED, OUTPUT);
+pinMode(GREEN, OUTPUT);
+pinMode(BLUE, OUTPUT);
+Serial.println("Running");
+}
+void loop() {
+  
+while(BT.available()) {
+delay(10);
+char c=BT.read();
+if(c=='#')
+{break; }
+voice += c;
+
+}
+if (voice.length() > 0) {
+Serial.println(voice);
+if (voice == "welcome" || voice == "on") // if the voice says "welcome", all the LEDs turn on
+{
+allon() ;
+}
+else if (voice == "goodbye" || voice=="switch off all") // If the voice says"goodbye", all the LEDs turn off
+{
+alloff() ;
+}
+else if(voice =="red" || voice =="white on"){
+RedOn();
+}
+else if(voice =="red color off"){
+RedOff();
+}
+else if(voice =="blue " || voice =="blue on"){
+BlueOn();
+}
+else if(voice =="blue off"){
+BlueOff();
+}
+else if(voice =="green color" || voice =="green on"){
+GreenOn();
+}
+else if(voice =="green off"){
+GreenOff();
+}
+voice="";
+}
+}
